@@ -1,0 +1,38 @@
+export const products = [
+  {
+    id: 1,
+    name: '中式极简泡茶杯',
+    category: 'cup',
+    markets: ['UK', 'FR', 'DE', 'DK'],
+    price: 29.9,
+    tags: ['中式美学', '环保', '耐用'],
+    description: '以中国茶文化为核心，融合欧洲极简审美的泡茶杯。',
+  },
+  {
+    id: 2,
+    name: '可降解环保茶包',
+    category: 'teabag',
+    markets: ['FR', 'DE', 'DK'],
+    price: 9.9,
+    tags: ['环保', '可持续'],
+    description: '采用可降解材料，符合欧洲环保消费理念。',
+  },
+  {
+    id: 3,
+    name: '养生茶组合',
+    category: 'tea',
+    markets: ['UK', 'FR'],
+    price: 19.9,
+    tags: ['养生', '配套'],
+    description: '搭配泡茶杯使用的中式养生茶。',
+  },
+  {
+    id: 4,
+    name: '天然木材按摩梳',
+    category: 'accessory',
+    markets: ['DE', 'DK'],
+    price: 15.9,
+    tags: ['极简', '天然材质'],
+    description: '天然木材制作，强调实用性与耐用性。',
+  },
+]
