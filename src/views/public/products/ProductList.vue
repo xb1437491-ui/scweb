@@ -59,32 +59,50 @@
       >
         <el-card
           shadow="hover"
-          style="cursor:pointer; height:100%;"
+          style="cursor:pointer; height:100%; overflow:hidden;"
           @click="goDetail(p.id)"
         >
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-            <div style="font-weight:700; line-height:1.2;">{{ p.name }}</div>
-            <div style="font-weight:700;">¥{{ formatPrice(p.price) }}</div>
+          <!-- 主图 -->
+          <div class="pl-img" v-if="cardImage(p)">
+            <img :src="cardImage(p)" :alt="p.name" />
+          </div>
+          <div class="pl-img pl-img-ph" v-else>
+            <div>暂无图片</div>
           </div>
 
-          <div style="margin-top:8px; color:#666; font-size:13px; min-height:40px;">
-            {{ p.description }}
-          </div>
+          <!-- 信息 -->
+          <div style="padding-top:10px; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+              <div style="font-weight:800; line-height:1.2;">{{ p.name }}</div>
+              <div style="font-weight:800; white-space:nowrap;">¥{{ formatPrice(p.price) }}</div>
+            </div>
 
-          <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
-            <el-tag size="small" type="success">{{ categoryLabel(p.category) }}</el-tag>
-            <el-tag v-for="t in p.tags" :key="t" size="small">{{ t }}</el-tag>
-          </div>
+            <div style="color:#666; font-size:13px; line-height:1.6; min-height:42px;">
+              {{ p.description }}
+            </div>
 
-          <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
-            <el-tag
-              v-for="m in p.markets"
-              :key="m"
-              size="small"
-              type="info"
-            >
-              {{ m }}
+            <!-- 亮点（自动取第一条） -->
+            <el-tag v-if="firstHighlight(p)" type="success" effect="plain">
+              亮点：{{ firstHighlight(p) }}
             </el-tag>
+
+            <!-- 分类 + 标签 -->
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <el-tag size="small" type="success">{{ categoryLabel(p.category) }}</el-tag>
+              <el-tag v-for="t in (p.tags || [])" :key="t" size="small">{{ t }}</el-tag>
+            </div>
+
+            <!-- 市场 -->
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <el-tag
+                v-for="m in (p.markets || [])"
+                :key="m"
+                size="small"
+                type="info"
+              >
+                {{ m }}
+              </el-tag>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -101,7 +119,6 @@ import { products } from '../../../mock/products'
 
 const router = useRouter()
 
-// 筛选状态
 const q = ref('')
 const category = ref('')
 const market = ref('')
@@ -151,19 +168,25 @@ function matchText(p, text) {
   return hay.includes(t)
 }
 
+// ✅ 取卡片图片：优先 hero.image，没有就空
+function cardImage(p) {
+  return p?.hero?.image || ''
+}
+
+// ✅ 取第一条亮点：没有就空
+function firstHighlight(p) {
+  const h = p?.highlights?.[0]
+  if (!h) return ''
+  return h.title ? `${h.title}` : ''
+}
+
 const filtered = computed(() => {
   let list = [...products]
 
-  // 搜索
   list = list.filter((p) => matchText(p, q.value))
-
-  // 分类筛选
   if (category.value) list = list.filter((p) => p.category === category.value)
-
-  // 市场筛选
   if (market.value) list = list.filter((p) => (p.markets || []).includes(market.value))
 
-  // 排序
   if (sort.value === 'price_asc') list.sort((a, b) => Number(a.price) - Number(b.price))
   if (sort.value === 'price_desc') list.sort((a, b) => Number(b.price) - Number(a.price))
   if (sort.value === 'name_asc') list.sort((a, b) => String(a.name).localeCompare(String(b.name)))
@@ -171,3 +194,27 @@ const filtered = computed(() => {
   return list
 })
 </script>
+
+<style scoped>
+.pl-img {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+.pl-img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.pl-img-ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 13px;
+}
+</style>
