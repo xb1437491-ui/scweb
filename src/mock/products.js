@@ -11,8 +11,7 @@ export const products = [
     // ✅ 下面是详情页要用的“加分内容”
     hero: {
       // 先放占位图（后面你们有产品图再换链接/本地图片）
-      image:
-        'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=1200&q=80',
+      image:'/images/teacup.jpg',
       alt: '中式极简泡茶杯',
     },
     highlights: [
