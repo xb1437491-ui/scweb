@@ -31,7 +31,6 @@
           <el-option label="法国 FR" value="FR" />
           <el-option label="德国 DE" value="DE" />
           <el-option label="丹麦 DK" value="DK" />
-          <el-option label="塞尔维亚 RS" value="RS" />
         </el-select>
 
         <el-select v-model="sort" placeholder="排序">
